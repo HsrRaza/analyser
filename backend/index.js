@@ -26,10 +26,6 @@ res.send("hellow")
 
 app.use("/api", uploadRes);
 
-// 🚀 IMPORTANT: Do NOT use app.listen()
-// Vercel will handle the server for you.
-app.listen(4000, ()=>{
-    console.log("server is listing ");
-    
-})
+// Export the Express app so serverless platforms (Vercel) can use it.
+// Do NOT call `app.listen()` here — use `server.js` for local development.
 export default app;
