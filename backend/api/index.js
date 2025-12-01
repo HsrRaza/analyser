@@ -9,14 +9,14 @@ const app = express();
 // CORS FIX
 app.use(
   cors({
-    origin:'*',
-    methods: ["GET", "POST"],
-    allowedHeaders: ["Content-Type"],
+    origin: '*', // Allow all origins (NOT recommended for production)
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    credentials: false
   })
 );
 
 app.use(express.json());
-app.use(express.urlencoded({extended:true}))
+app.use(express.urlencoded({ extended: true }))
 
 // app.get("/", (req, res)=>{
 // res.send("hello")
