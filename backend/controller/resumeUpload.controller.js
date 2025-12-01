@@ -1,4 +1,3 @@
-import { PDFParse } from "pdf-parse"
 import { getAtsScore } from "../services/ats.service.js";
 
 export const uploadResume = async (req, res) => {
@@ -14,28 +13,29 @@ export const uploadResume = async (req, res) => {
         console.log("Uploaded file:", { fileName, mimeType });
         console.log("Parsing PDF...");
 
-        // convert Buffer → Uint8Array for pdf-parse v2
-        const uint8 = new Uint8Array(fileBuffer);
+        // Dynamic import for CommonJS module
+        const pdfParse = (await import("pdf-parse")).default;
+        
+        const data = await pdfParse(fileBuffer);
 
-        const data = new PDFParse({ data: uint8 });
+        console.log("Extracted text:", data.text);
+        console.log("Total pages:", data.numpages);
 
-        const result = await data.getText()
-
-
-        console.log("Extracted text:", result.text);
-
-
-        const atsReport = await getAtsScore(result.text);
+        const atsReport = await getAtsScore(data.text);
 
         return res.status(200).json({
             success: true,
             fileName,
-            text: result.text,
+            text: data.text,
+            pages: data.numpages,
             aiResponse: atsReport,
         });
 
     } catch (error) {
         console.error("Error parsing PDF:", error);
-        return res.status(500).json({ error: "Error while parsing PDF", message: error.message });
+        return res.status(500).json({ 
+            error: "Error while parsing PDF", 
+            message: error.message 
+        });
     }
 };
