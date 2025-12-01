@@ -22,6 +22,7 @@ function App() {
     try {
       const res = await axios.post(`${API_URL}/api/upload`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
+          withCredentials: false, 
       });
 
       setAiResult(res.data); // EVERYTHING received here
