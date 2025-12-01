@@ -32,24 +32,14 @@ Resume:
 ${resumeText}
 `;
 
-    if (!process.env.GEMINI_API_KEY) {
-        throw new Error("GEMINI_API_KEY is not set in environment variables");
-    }
+    const response = await gemini.chat.completions.create({
+        model: "gemini-2.0-flash",
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0
+    });
 
-    let response;
-    try {
-        response = await gemini.chat.completions.create({
-            model: "gemini-2.0-flash",
-            messages: [{ role: "user", content: prompt }],
-            temperature: 0
-        });
-    } catch (err) {
-        console.error("Gemini API call failed:", err);
-        throw new Error("Failed to call Gemini API: " + (err.message || err));
-    }
-
-    // Get raw AI response (defensively)
-    let raw = response?.choices?.[0]?.message?.content || (response?.data && response.data[0]?.text) || "";
+    // Get raw AI response
+    let raw = response.choices[0].message.content;
 
     // Clean accidental code fences
     raw = raw.replace(/```json|```/g, "").trim();
@@ -58,7 +48,6 @@ ${resumeText}
     let result;
     try {
         result = JSON.parse(raw);
-
     } catch (err) {
         console.error("JSON Parse Failed. Raw Output:", raw);
         throw new Error("Gemini returned non-JSON response");

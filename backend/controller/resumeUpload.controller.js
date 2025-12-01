@@ -3,7 +3,9 @@ import { getAtsScore } from "../services/ats.service.js";
 
 // Create require function for CommonJS modules
 const require = createRequire(import.meta.url);
-const pdfParse = require("pdf-parse");
+
+// Load pdf-parse - THIS IS THE IMPORTANT CHANGE
+const pdfParse = require('pdf-parse');
 
 export const uploadResume = async (req, res) => {
     try {
@@ -18,19 +20,23 @@ export const uploadResume = async (req, res) => {
         console.log("Uploaded file:", { fileName, mimeType });
         console.log("Parsing PDF...");
 
+        // JUST USE pdfParse LIKE THIS - NO .default
         const data = await pdfParse(fileBuffer);
 
         console.log("Extracted text:", data.text);
         console.log("Total pages:", data.numpages);
+  
+        const atsReport = await getAtsScore(data.text)
+        console.log("ai Response :", atsReport);
+        
 
-        const atsReport = await getAtsScore(data.text);
 
         return res.status(200).json({
             success: true,
             fileName,
             text: data.text,
             pages: data.numpages,
-            aiResponse: atsReport,
+            aiResponse:atsReport
         });
 
     } catch (error) {
