@@ -1,4 +1,9 @@
+import { createRequire } from "module";
 import { getAtsScore } from "../services/ats.service.js";
+
+// Create require function for CommonJS modules
+const require = createRequire(import.meta.url);
+const pdfParse = require("pdf-parse");
 
 export const uploadResume = async (req, res) => {
     try {
@@ -13,9 +18,6 @@ export const uploadResume = async (req, res) => {
         console.log("Uploaded file:", { fileName, mimeType });
         console.log("Parsing PDF...");
 
-        // Dynamic import for CommonJS module
-        const pdfParse = (await import("pdf-parse")).default;
-        
         const data = await pdfParse(fileBuffer);
 
         console.log("Extracted text:", data.text);
