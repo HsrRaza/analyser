@@ -20,7 +20,7 @@ function App() {
     const API_URL = import.meta.env.VITE_API_URL;
 
     try {
-      const res = await axios.post(`${API_URL}/api/upload-resume`, formData, {
+      const res = await axios.post(`${API_URL}/api/upload`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
