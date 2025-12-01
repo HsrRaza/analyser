@@ -9,7 +9,7 @@ function App() {
     const file = e.target.files[0];
     if (!file) return;
     // clearing previous results
-      setAiResult(null);
+    setAiResult(null);
 
     const formData = new FormData();
     formData.append("resume", file);
@@ -17,8 +17,10 @@ function App() {
     setLoading(true);
     setAiResult(null);
 
+    const API_URL = import.meta.env.VITE_API_URL;
+
     try {
-      const res = await axios.post("https://vercerl-backend.vercel.app/api/upload-resume", formData, {
+      const res = await axios.post(`${API_URL}/api/upload-resume`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -48,10 +50,10 @@ function App() {
         <div className="mt-6 w-full max-w-3xl bg-white p-6 rounded-lg shadow">
           <h2 className="text-xl font-semibold mb-4">ATS Report</h2>
 
-            <div className="mt-4">
+          <div className="mt-4">
 
             <p className="font-semibold">
-             {aiResult.aiResponse?.intro}
+              {aiResult.aiResponse?.intro}
             </p >
           </div>
 
@@ -60,7 +62,7 @@ function App() {
 
 
           <p className="font-bold text-2xl mt-4">
-           ATS Score: {aiResult.aiResponse?.atsScore}/100
+            ATS Score: {aiResult.aiResponse?.atsScore}/100
           </p>
 
           <div className="mt-4">
