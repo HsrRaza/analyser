@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 
 
-import uploadRes from "./routes/upload.route.js";
+import uploadRes from "../routes/upload.route.js";
 
 const app = express();
 
